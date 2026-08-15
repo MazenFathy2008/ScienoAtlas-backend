@@ -4,7 +4,8 @@ const paperScheme = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    minLength: 5,
+    unique: true,  
+    minLength: 5, 
   },
   description: {
     type: String,
