@@ -12,11 +12,6 @@ const paperScheme = mongoose.Schema({
     trim: true,
     minLength: 50,
   },
-  pdfUrl: {
-    type: String,
-    required: true,
-    trim: true,
-  },
   authors: {
     type: Array,
     required: true,
@@ -27,9 +22,10 @@ const paperScheme = mongoose.Schema({
     trim: true,
     minLength: 5,
   },
-  isVisable: {
-    type: Boolean,
+  pdfUrl: {
+    type: String,
     required: true,
+    trim: true,
   },
   state: {
     type: String,
