@@ -18,6 +18,10 @@ const errorsMiddleware = (err, req, res, next) => {
     error = new Error(message);
     error.statusCode = 400;
   }
+  if (err.name === "FileTypeError") {
+    error = new Error(err.message);
+    error.statusCode = err.statusCode;
+  }
   res
     .status(error.statusCode || 500)
     .json({ succcess: false, massege: error.message || "Server Error" });
