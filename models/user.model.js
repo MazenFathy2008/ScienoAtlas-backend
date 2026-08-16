@@ -22,6 +22,15 @@ const userScheme = mongoose.Schema({
     required: true,
     minLenght: 8,
   },
+  age: {
+    type: Number,
+    required: true,
+  },
+  role: {
+    type: String,
+    required: true,
+    default: "user",
+  },
 });
 const User = mongoose.model("User", userScheme);
 export default User;
