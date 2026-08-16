@@ -24,7 +24,7 @@ const publishPaper = async (req, res, next) => {
         contentType: req.file.mimetype,
         upsert: false,
       });
-    res.json({ states: "Accepted Nigga" });
+    res.status(201).json({ states: "Accepted Nigga" });
   } catch (err) {
     next(err);
   }

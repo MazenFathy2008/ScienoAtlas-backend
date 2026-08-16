@@ -13,7 +13,7 @@ const signUpController = async (req, res, next) => {
       ...req.body,
     });
     await user.save();
-    res.json(req.body);
+    res.status(201).json(req.body);
   } catch (err) {
     next(err);
   }
