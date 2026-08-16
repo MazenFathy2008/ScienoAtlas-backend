@@ -23,7 +23,7 @@ const paperScheme = mongoose.Schema({
     trim: true,
     minLength: 5,
   },
-  pdfUrl: {
+  pdfName: {
     type: String,
     required: true,
     trim: true,
