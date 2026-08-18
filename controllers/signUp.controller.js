@@ -26,7 +26,7 @@ const signUpController = async (req, res, next) => {
     res.status(201).json({
       data: {
         token,
-        username: user[0].username,
+        name: user[0].name,
         email: user[0].email,
       },
       success: true,

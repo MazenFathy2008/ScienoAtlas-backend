@@ -29,7 +29,7 @@ const signInController = async (req, res, next) => {
     res.json({
       data: {
         token,
-        username: user.username,
+        name: user.name,
         email: user.email,
       },
       success: true,
