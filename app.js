@@ -6,8 +6,10 @@ import Publish from "./routes/Publish.route.js";
 import errorsMiddleware from "./middleware/error.middleware.js";
 import signUp from "./routes/signUp.route.js";
 import signIn from "./routes/signIn.route.js";
+import cors from "cors"
 dns.setServers(["8.8.8.8"]);
 const app = express();
+app.use(cors())
 app.use(express.json());
 app.use("/publish", Publish);
 app.use("/signingUp", signUp);
