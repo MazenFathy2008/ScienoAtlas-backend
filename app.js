@@ -1,5 +1,5 @@
 import express from "express";
-import { PORT } from "./config/env.js";
+import { FRONTEND_URL, PORT } from "./config/env.js";
 import connectDB from "./database/mongodb.js";
 import dns from "node:dns";
 import Publish from "./routes/Publish.route.js";
@@ -11,7 +11,12 @@ import cors from "cors";
 import checkAuth from "./routes/checkAuth.route.js";
 dns.setServers(["8.8.8.8"]);
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+  }),
+);
 app.use(cookieParser());
 app.use(express.json());
 app.use("/publish", Publish);

@@ -8,4 +8,5 @@ export const {
   SUPABASE_SECRET_KEY,
   JWT_SECRET,
   JWT_EXPIRES_IN,
+  FRONTEND_URL
 } = process.env;
