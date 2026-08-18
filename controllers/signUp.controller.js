@@ -24,16 +24,20 @@ const signUpController = async (req, res, next) => {
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN },
     );
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 3 * 24 * 60 * 60 * 1000,
+    });
     res.status(201).json({
       data: {
-        token,
         name: user[0].name,
         email: user[0].email,
       },
       success: true,
       message: "User Signed Up successfully",
     });
-    console.log("reciveid")
   } catch (err) {
     await session.abortTransaction();
     next(err);
