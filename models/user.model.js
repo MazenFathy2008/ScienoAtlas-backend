@@ -31,6 +31,17 @@ const userScheme = mongoose.Schema({
     required: true,
     default: "user",
   },
+  publisedPapers: {
+    type: Object,
+    required: true,
+    default: {
+      count: 0,
+      listOfPapers: [],
+    },
+  },
+  reasonOfjoining: {
+    type: String,
+  },
 });
 const User = mongoose.model("User", userScheme);
 export default User;

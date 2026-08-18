@@ -14,6 +14,7 @@ const signUpController = async (req, res, next) => {
     }
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
     req.body.password = hashedPassword;
+
     const user = await User.create([req.body], { session });
     await session.commitTransaction();
     const token = jwt.sign(
@@ -32,6 +33,7 @@ const signUpController = async (req, res, next) => {
       success: true,
       message: "User Signed Up successfully",
     });
+    console.log("reciveid")
   } catch (err) {
     await session.abortTransaction();
     next(err);
