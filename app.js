@@ -8,6 +8,7 @@ import signUp from "./routes/signUp.route.js";
 import signIn from "./routes/signIn.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import checkAuth from "./routes/checkAuth.route.js";
 dns.setServers(["8.8.8.8"]);
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/publish", Publish);
 app.use("/signingUp", signUp);
 app.use("/signingIn", signIn);
+app.use("/auth/me", checkAuth);
 app.use(errorsMiddleware);
 app.listen(PORT, async () => {
   console.log(`http://localhost:${PORT}`);

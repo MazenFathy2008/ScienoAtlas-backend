@@ -1,7 +1,6 @@
 const errorsMiddleware = (err, req, res, next) => {
   let error = { ...err };
   error.message = err.message;
-
   if (err.name === "CastError") {
     const message = "This Data not found";
     error = new Error(message);
@@ -22,8 +21,21 @@ const errorsMiddleware = (err, req, res, next) => {
     error = new Error(err.message);
     error.statusCode = err.statusCode;
   }
-  res
-    .status(error.statusCode || 500)
-    .json({ succcess: false, massege: error.message || "Server Error" });
+  if (err.name === "JsonWebTokenError") {
+    error = new Error(err.message);
+    error.statusCode = 401;
+  }
+  if (err.name === "TokenExpiredError") {
+    const error = new Error("Token expired");
+    error.statusCode = 401;
+    return res.status(401).json({
+      success: false,
+      message: error.message,
+    });
+  }
+  res.status(error.statusCode || 500).json({
+    success: false,
+    massege: error.message || "Server Error",
+  });
 };
 export default errorsMiddleware;
