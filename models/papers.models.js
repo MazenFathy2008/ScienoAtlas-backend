@@ -1,43 +1,69 @@
 import mongoose from "mongoose";
-const paperScheme = mongoose.Schema({
+
+const paperSchema = mongoose.Schema({
   title: {
     type: String,
     required: true,
     trim: true,
-    unique: true,  
-    minLength: 5, 
+    unique: true,
+    minLength: 5,
   },
-  description: {
+
+  abstract: {
     type: String,
     required: true,
     trim: true,
     minLength: 50,
   },
+
   authors: {
     type: Array,
     required: true,
   },
-  paperType: {
-    type: String,
-    required: true,
-    trim: true,
-    minLength: 5,
-  },
-  pdfName: {
+
+  type: {
     type: String,
     required: true,
     trim: true,
   },
+
+  cat: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
+  tags: {
+    type: Array,
+    required: true,
+  },
+
+  file: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+
   state: {
     type: String,
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
     required: true,
-    trim: true,
   },
-  publishingDate: {
+
+  date: {
     type: Date,
+    default: Date.now,
     required: true,
-    trim: true,
+  },
+
+  uploadedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
 });
-const Paper = mongoose.model("Paper", paperScheme);
+
+const Paper = mongoose.model("Paper", paperSchema);
+
 export default Paper;

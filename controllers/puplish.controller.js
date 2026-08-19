@@ -1,7 +1,12 @@
+import mongoose from "mongoose";
 import supabase from "../config/supabase.config.js";
 import Paper from "../models/papers.models.js";
+import verifyToken from "../util/verfiy-token.js";
+import User from "../models/user.model.js";
 const publishPaper = async (req, res, next) => {
   try {
+    const token = req.cookies.token;
+    const user = await verifyToken(token);
     if (req.file.mimetype !== "application/pdf") {
       const error = new Error(
         "File formate is wrong, Please Upload PDF files only",
@@ -11,20 +16,56 @@ const publishPaper = async (req, res, next) => {
       throw error;
     }
     const fileName = `${Date.now()}-${req.file.originalname}`;
-    const paper = new Paper({
-      ...req.body,
-      publishingDate: Date.now(),
-      state: "pending",
-      pdfName: fileName,
-    });
-    await paper.save();
-    await supabase.storage
+    const filePath = `pdfs/${fileName}`;
+    const { error } = await supabase.storage
       .from("pdfs")
-      .upload(`pdfs/${fileName}`, req.file.buffer, {
+      .upload(filePath, req.file.buffer, {
         contentType: req.file.mimetype,
         upsert: false,
       });
-    res.status(201).json({ states: "Accepted Nigga" });
+    if (error) {
+      throw error;
+    }
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
+      const paper = await Paper.create(
+        [
+          {
+            ...req.body,
+            date: new Date(),
+            state: "pending",
+            file: filePath,
+            uploadedBy: user._id,
+          },
+        ],
+        { session },
+      );
+      const updatedUser = await User.findByIdAndUpdate(
+        user._id,
+        {
+          $push: {
+            "publisedPapers.listOfPapers": paper[0]._id,
+          },
+          $inc: {
+            "publisedPapers.count": 1,
+          },
+        },
+        {
+          session,
+          new: true,
+        },
+      );
+      console.log(updatedUser.publisedPapers);
+      await session.commitTransaction();
+    } catch (err) {
+      await session.abortTransaction();
+      await supabase.storage.from("pdfs").remove([filePath]);
+      throw err;
+    } finally {
+      await session.endSession();
+    }
+    res.status(201).json({ message: "Data has benn ent successfully" });
   } catch (err) {
     next(err);
   }
