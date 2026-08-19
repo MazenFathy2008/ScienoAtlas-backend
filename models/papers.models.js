@@ -25,7 +25,7 @@ const paperSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ["paper", "qrticle", "pdf"],
+    enum: ["paper", "article", "pdf"],
   },
 
   cat: {

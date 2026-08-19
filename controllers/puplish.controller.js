@@ -29,6 +29,8 @@ const publishPaper = async (req, res, next) => {
     const session = await mongoose.startSession();
     try {
       session.startTransaction();
+      req.body.authors = JSON.parse(req.body.authors);
+      req.body.tags = JSON.parse(req.body.tags);
       const paper = await Paper.create(
         [
           {
@@ -67,6 +69,7 @@ const publishPaper = async (req, res, next) => {
     }
     res.status(201).json({ message: "Data has benn ent successfully" });
   } catch (err) {
+    console.log("PAPER ERROR:", err);
     next(err);
   }
 };
@@ -74,18 +77,21 @@ const getPapers = async (req, res, next) => {
   try {
     const data = await Paper.find();
     const papers = data.map((paper) => {
-      if (paper.state === "approved") {
-        const pdfUrl = supabase.storage
-          .from("pdfs")
-          .getPublicUrl(`pdfs/${paper.pdfName}`).data.publicUrl;
+      // if (paper.state === "approved") {
+      //   const pdfUrl = supabase.storage
+      //     .from("pdfs")
+      //     .getPublicUrl(`pdfs/${paper.pdfName}`).data.publicUrl;
 
-        return {
-          ...paper.toObject(),
-          pdfUrl,
-        };
-      } else {
-        return null;
-      }
+      //   return {
+      //     ...paper.toObject(),
+      //     pdfUrl,
+      //   };
+      // } else {
+      //   return null;
+      // }
+      paper._id = null;
+      paper.state = null;
+      return paper;
     });
     res.json(papers);
   } catch (err) {
