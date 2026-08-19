@@ -1,9 +1,11 @@
 export default function signOutController(req, res, next) {
   try {
+    const isProduction = process.env.NODE_ENV === "production";
     res.clearCookie("token", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "lax",
+      maxAge: 3 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({
       success: true,
