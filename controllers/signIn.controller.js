@@ -7,21 +7,22 @@ const signInController = async (req, res, next) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
-      const error = new Error("Invalid email or password");
+      const error = new Error();
       error.statusCode = 401;
+      error.errorCode = "INVALID_CREDENTIALS";
       throw error;
     }
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      const error = new Error("Invalid email or password");
+      const error = new Error();
       error.statusCode = 401;
+      error.errorCode = "INVALID_CREDENTIALS";
       throw error;
     }
     const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
     const isProduction = process.env.NODE_ENV === "production";
-
     res.cookie("token", token, {
       httpOnly: true,
       secure: isProduction,
@@ -34,7 +35,6 @@ const signInController = async (req, res, next) => {
         email: user.email,
       },
       success: true,
-      message: "User Signed in successfully",
     });
   } catch (err) {
     next(err);

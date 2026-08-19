@@ -1,41 +1,34 @@
 const errorsMiddleware = (err, req, res, next) => {
-  let error = { ...err };
-  error.message = err.message;
+  let statusCode = err.statusCode || 500;
+  let errorCode = err.errorCode || "SERVER_ERROR";
   if (err.name === "CastError") {
-    const message = "This Data not found";
-    error = new Error(message);
-    error.statusCode = 404;
+    statusCode = 404;
+    errorCode = "DATA_NOT_FOUND";
   }
   if (err.code === 11000) {
-    const message = "This Data Already exsists";
-    error = new Error(message);
-    error.statusCode = 409;
+    statusCode = 409;
+    errorCode = "DATA_ALREADY_EXISTS";
   }
   if (err.name === "ValidationError") {
-    const message =
-      "There is a missing value or a wrong format please check it again";
-    error = new Error(message);
-    error.statusCode = 400;
+    statusCode = 400;
+    errorCode = "VALIDATION_ERROR";
   }
   if (err.name === "FileTypeError") {
-    error = new Error(err.message);
-    error.statusCode = err.statusCode;
+    statusCode = err.statusCode || 400;
+    errorCode = "INVALID_FILE_TYPE";
   }
   if (err.name === "JsonWebTokenError") {
-    error = new Error(err.message);
-    error.statusCode = 401;
+    statusCode = 401;
+    errorCode = "INVALID_TOKEN";
   }
   if (err.name === "TokenExpiredError") {
-    const error = new Error("Token expired");
-    error.statusCode = 401;
-    return res.status(401).json({
-      success: false,
-      message: error.message,
-    });
+    statusCode = 401;
+    errorCode = "TOKEN_EXPIRED";
   }
-  res.status(error.statusCode || 500).json({
+  console.log(errorCode);
+  res.status(statusCode).json({
     success: false,
-    massege: error.message || "Server Error",
+    error: errorCode,
   });
 };
 export default errorsMiddleware;

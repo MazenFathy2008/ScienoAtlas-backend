@@ -7,14 +7,8 @@ const signUpController = async (req, res, next) => {
   const session = await mongoose.startSession();
   session.startTransaction();
   try {
-    if (!req.body.password) {
-      const error = new Error("Password is required");
-      error.name = "ValidationError";
-      throw error;
-    }
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
     req.body.password = hashedPassword;
-
     const user = await User.create([req.body], { session });
     await session.commitTransaction();
     const token = jwt.sign(
@@ -25,7 +19,6 @@ const signUpController = async (req, res, next) => {
       { expiresIn: JWT_EXPIRES_IN },
     );
     const isProduction = process.env.NODE_ENV === "production";
-
     res.cookie("token", token, {
       httpOnly: true,
       secure: isProduction,
@@ -38,7 +31,6 @@ const signUpController = async (req, res, next) => {
         email: user[0].email,
       },
       success: true,
-      message: "User Signed Up successfully",
     });
   } catch (err) {
     await session.abortTransaction();

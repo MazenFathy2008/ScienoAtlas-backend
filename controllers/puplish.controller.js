@@ -7,12 +7,17 @@ const publishPaper = async (req, res, next) => {
   try {
     const token = req.cookies.token;
     const user = await verifyToken(token);
-    if (req.file.mimetype !== "application/pdf") {
-      const error = new Error(
-        "File formate is wrong, Please Upload PDF files only",
-      );
-      error.name = "FileTypeError";
+    if (!req.file) {
+      const error = new Error();
       error.statusCode = 400;
+      error.errorCode = "FILE_REQUIRED";
+      throw error;
+    }
+
+    if (req.file.mimetype !== "application/pdf") {
+      const error = new Error();
+      error.statusCode = 400;
+      error.errorCode = "INVALID_FILE_TYPE";
       throw error;
     }
     const fileName = `${Date.now()}-${req.file.originalname}`;
@@ -29,8 +34,15 @@ const publishPaper = async (req, res, next) => {
     const session = await mongoose.startSession();
     try {
       session.startTransaction();
-      req.body.authors = JSON.parse(req.body.authors);
-      req.body.tags = JSON.parse(req.body.tags);
+      try {
+        req.body.authors = JSON.parse(req.body.authors);
+        req.body.tags = JSON.parse(req.body.tags);
+      } catch {
+        const error = new Error();
+        error.statusCode = 400;
+        error.errorCode = "INVALID_DATA_FORMAT";
+        throw error;
+      }
       const paper = await Paper.create(
         [
           {
@@ -58,7 +70,6 @@ const publishPaper = async (req, res, next) => {
           new: true,
         },
       );
-      console.log(updatedUser.publisedPapers);
       await session.commitTransaction();
     } catch (err) {
       await session.abortTransaction();
@@ -69,7 +80,6 @@ const publishPaper = async (req, res, next) => {
     }
     res.status(201).json({ message: "Data has benn ent successfully" });
   } catch (err) {
-    console.log("PAPER ERROR:", err);
     next(err);
   }
 };
