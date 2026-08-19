@@ -25,12 +25,14 @@ const paperSchema = mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    enum: ["paper", "qrticle", "pdf"],
   },
 
   cat: {
     type: String,
     required: true,
     trim: true,
+    enum: ["Research Paper", "Article", "PDF"],
   },
 
   tags: {
