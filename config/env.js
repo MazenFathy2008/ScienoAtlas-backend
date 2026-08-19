@@ -1,6 +1,7 @@
 import { config } from "dotenv";
-const file = `.env.${process.env.NODE_ENV || "development"}.local`;
-config({ path: file });
+if (process.env.NODE_ENV !== "production") {
+  config({ path: ".env.development.local" });
+}
 export const {
   PORT,
   MONGODB_URI,
@@ -8,5 +9,5 @@ export const {
   SUPABASE_SECRET_KEY,
   JWT_SECRET,
   JWT_EXPIRES_IN,
-  FRONTEND_URL
+  FRONTEND_URL,
 } = process.env;
