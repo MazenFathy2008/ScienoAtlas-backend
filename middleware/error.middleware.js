@@ -25,7 +25,6 @@ const errorsMiddleware = (err, req, res, next) => {
     statusCode = 401;
     errorCode = "TOKEN_EXPIRED";
   }
-  console.log(errorCode);
   res.status(statusCode).json({
     success: false,
     error: errorCode,
