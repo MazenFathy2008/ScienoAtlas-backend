@@ -20,7 +20,7 @@ const publishPaper = async (req, res, next) => {
       error.errorCode = "INVALID_FILE_TYPE";
       throw error;
     }
-    const fileName = `${Date.now()}-${req.file.originalname}`;
+    const fileName = `${Date.now()}-${crypto.randomUUID()}.pdf`;
     const filePath = `pdfs/${fileName}`;
     const { error } = await supabase.storage
       .from("pdfs")
