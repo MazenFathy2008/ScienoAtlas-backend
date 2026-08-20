@@ -7,9 +7,10 @@ import errorsMiddleware from "./middleware/error.middleware.js";
 import signUp from "./routes/signUp.route.js";
 import signIn from "./routes/signIn.route.js";
 import cookieParser from "cookie-parser";
-import cors from "cors"; 
+import cors from "cors";
 import checkAuth from "./routes/checkAuth.route.js";
 import signOut from "./routes/signOut.route.js";
+import paperLink from "./routes/paperLink.route.js";
 dns.setServers(["8.8.8.8"]);
 const app = express();
 app.use(
@@ -25,6 +26,7 @@ app.use("/signingUp", signUp);
 app.use("/signingIn", signIn);
 app.use("/auth/me", checkAuth);
 app.use("/signingOut", signOut);
+app.use("/link", paperLink);
 app.use(errorsMiddleware);
 app.listen(PORT, async () => {
   console.log(`http://localhost:${PORT}`);

@@ -99,7 +99,6 @@ const getPapers = async (req, res, next) => {
       // } else {
       //   return null;
       // }
-      paper._id = null;
       paper.state = null;
       return paper;
     });
