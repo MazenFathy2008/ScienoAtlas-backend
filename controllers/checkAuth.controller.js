@@ -8,8 +8,9 @@ export default async function checkAuthController(req, res, next) {
       success: true,
       message: "User is authenticated",
       data: {
-        name: user.name,
-        email: user.email,
+        ...user._doc,
+        _id: null,
+        password: null,
       },
     });
   } catch (err) {
