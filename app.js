@@ -11,8 +11,12 @@ import cors from "cors";
 import checkAuth from "./routes/checkAuth.route.js";
 import signOut from "./routes/signOut.route.js";
 import paperLink from "./routes/paperLink.route.js";
+import { WebSocketServer, WebSocket } from "ws";
+import http from "http";
+import setUpWepSocket from "./WebSocket/Websocket.js";
 dns.setServers(["8.8.8.8"]);
 const app = express();
+const server = http.createServer(app);
 app.use(
   cors({
     origin: FRONTEND_URL,
@@ -28,7 +32,13 @@ app.use("/auth/me", checkAuth);
 app.use("/signingOut", signOut);
 app.use("/link", paperLink);
 app.use(errorsMiddleware);
-app.listen(PORT, async () => {
+server.listen(PORT, async () => {
   console.log(`http://localhost:${PORT}`);
   await connectDB();
 });
+const wss = new WebSocketServer({
+  server,
+  maxPayload: 1024 * 1024,
+});
+
+setUpWepSocket(wss);
