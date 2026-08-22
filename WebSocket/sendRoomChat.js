@@ -1,5 +1,5 @@
 import getChat from "./getChat.js";
-export default async function sedRoomChat(socket, chat) {
+export default async function sendRoomChat(socket, chat) {
   const data = await getChat(chat);
   data._id = null;
   socket.send(
