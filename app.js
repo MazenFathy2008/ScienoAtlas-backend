@@ -11,7 +11,7 @@ import cors from "cors";
 import checkAuth from "./routes/checkAuth.route.js";
 import signOut from "./routes/signOut.route.js";
 import paperLink from "./routes/paperLink.route.js";
-import { WebSocketServer, WebSocket } from "ws";
+import { WebSocketServer} from "ws";
 import http from "http";
 import setUpWepSocket from "./WebSocket/Websocket.js";
 dns.setServers(["8.8.8.8"]);
