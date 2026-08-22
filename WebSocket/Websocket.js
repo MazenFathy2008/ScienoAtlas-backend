@@ -1,8 +1,9 @@
 import verifyToken from "../util/verfiy-token.js";
 import { WebSocket } from "ws";
+import messageHandler from "./handleMessage.js";
 
 export default function setUpWepSocket(wss) {
-  wss.on("connection", (socket,request) => {
+  wss.on("connection", async (socket, request) => {
     try {
       const token = request.headers.cookie
         ?.split("; ")
@@ -10,9 +11,9 @@ export default function setUpWepSocket(wss) {
         ?.split("=")[1];
       if (!token) {
         socket.close();
-        return
+        return;
       }
-      const user = verifyToken(token);
+      const user = await verifyToken(token);
       if (socket.readyState === WebSocket.OPEN) {
         socket.send(
           JSON.stringify({
@@ -20,6 +21,7 @@ export default function setUpWepSocket(wss) {
           }),
         );
       }
+      messageHandler(socket, user);
     } catch (err) {
       socket.close();
       console.log(err);
