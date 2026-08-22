@@ -12,7 +12,7 @@ export default async function sendMessage(socket, payLoad, user) {
   if (!chatInDB) {
     Chat.create({
       chat,
-      message: [messageData],
+      messages: [messageData],
     });
     return;
   }
