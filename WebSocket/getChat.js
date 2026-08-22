@@ -1,8 +1,8 @@
 import Chat from "../models/chat.model.js";
 
-export default async function getChat(committeeTitle) {
+export default async function getChat(chatTitle) {
   const chat = await Chat.findOne({
-    committee: committeeTitle,
+    chat: chatTitle,
   });
   if (!chat) {
     return;
