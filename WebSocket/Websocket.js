@@ -2,7 +2,7 @@ import verifyToken from "../util/verfiy-token.js";
 import { WebSocket } from "ws";
 
 export default function setUpWepSocket(wss) {
-  wss.on("connection", (socket,request) => {
+  wss.on("connection", (socket, request) => {
     try {
       const token = request.headers.cookie
         ?.split("; ")
@@ -10,7 +10,7 @@ export default function setUpWepSocket(wss) {
         ?.split("=")[1];
       if (!token) {
         socket.close();
-        return
+        return;
       }
       const user = verifyToken(token);
       if (socket.readyState === WebSocket.OPEN) {
@@ -20,6 +20,11 @@ export default function setUpWepSocket(wss) {
           }),
         );
       }
+      socket.on("message", (data) => {
+        data = JSON.parse(data);
+        const { payload, type } = data;
+        console.log(data);
+      });
     } catch (err) {
       socket.close();
       console.log(err);

@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 const chatSceme = mongoose.Schema({
-  committee: {
+  chat: {
     type: String,
     required: true,
     trim: true,
     unique: true,
-    enum: ["physics", "chemistry", "biology", "astronomy", "math & cs"],
+    enum: ["physics", "chemistry", "biology", "astronomy", "math_cs"],
   },
   messages: [
     {
