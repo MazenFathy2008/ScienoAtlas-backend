@@ -9,7 +9,6 @@ export default async function checkAuthController(req, res, next) {
       message: "User is authenticated",
       data: {
         ...user._doc,
-        _id: null,
         password: null,
       },
     });
