@@ -1,6 +1,7 @@
 import verifyToken from "../util/verfiy-token.js";
 import { WebSocket } from "ws";
 import messageHandler from "./handleMessage.js";
+import sedRoomChat from "./sendRoomChat.js";
 
 export default function setUpWepSocket(wss) {
   wss.on("connection", async (socket, request) => {
@@ -15,11 +16,7 @@ export default function setUpWepSocket(wss) {
       }
       const user = await verifyToken(token);
       if (socket.readyState === WebSocket.OPEN) {
-        socket.send(
-          JSON.stringify({
-            data: "Connected successfully",
-          }),
-        );
+        sedRoomChat(socket, "physics");
       }
       messageHandler(socket, user);
     } catch (err) {
