@@ -86,22 +86,14 @@ const publishPaper = async (req, res, next) => {
 const getPapers = async (req, res, next) => {
   try {
     const data = await Paper.find();
-    const papers = data.map((paper) => {
-      // if (paper.state === "approved") {
-      //   const pdfUrl = supabase.storage
-      //     .from("pdfs")
-      //     .getPublicUrl(`pdfs/${paper.pdfName}`).data.publicUrl;
+    const papers = data
+      .filter((paper) => paper.state === "approved")
+      .map((paper) => {
+        const paperObject = paper.toObject();
+        paperObject.state = null;
 
-      //   return {
-      //     ...paper.toObject(),
-      //     pdfUrl,
-      //   };
-      // } else {
-      //   return null;
-      // }
-      paper.state = null;
-      return paper;
-    });
+        return paperObject;
+      });
     res.json(papers);
   } catch (err) {
     next(err);
