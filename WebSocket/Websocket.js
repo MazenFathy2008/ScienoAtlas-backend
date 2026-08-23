@@ -1,5 +1,6 @@
 import verifyToken from "../util/verfiy-token.js";
 import messageHandler from "./handleMessage.js";
+import exitRoom from "./rooms-controllers/exitRoom.js";
 export default function setUpWepSocket(wss) {
   wss.on("connection", async (socket, request) => {
     try {
@@ -11,6 +12,9 @@ export default function setUpWepSocket(wss) {
         socket.close();
         return;
       }
+      socket.on("close", () => {
+        exitRoom(socket);
+      }); 
       const user = await verifyToken(token);
       messageHandler(socket, user);
     } catch (err) {
