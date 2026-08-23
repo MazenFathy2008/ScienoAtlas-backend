@@ -19,7 +19,7 @@ const signInController = async (req, res, next) => {
       error.errorCode = "INVALID_CREDENTIALS";
       throw error;
     }
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user._doc._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES_IN,
     });
     const isProduction = process.env.NODE_ENV === "production";
@@ -31,8 +31,8 @@ const signInController = async (req, res, next) => {
     });
     res.json({
       data: {
-        name: user.name,
-        email: user.email,
+        ...user._doc,
+        password: null,
       },
       success: true,
     });

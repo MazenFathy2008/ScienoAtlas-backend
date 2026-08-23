@@ -4,16 +4,13 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { JWT_EXPIRES_IN, JWT_SECRET } from "../config/env.js";
 const signUpController = async (req, res, next) => {
-  const session = await mongoose.startSession();
-  session.startTransaction();
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 12);
     req.body.password = hashedPassword;
-    const user = await User.create([req.body], { session });
-    await session.commitTransaction();
+    const user = await User.create(req.body);
     const token = jwt.sign(
       {
-        userId: user[0]._id,
+        userId: user._doc._id,
       },
       JWT_SECRET,
       { expiresIn: JWT_EXPIRES_IN },
@@ -27,16 +24,13 @@ const signUpController = async (req, res, next) => {
     });
     res.status(201).json({
       data: {
-        name: user[0].name,
-        email: user[0].email,
+        ...user._doc,
+        password: null,
       },
       success: true,
     });
   } catch (err) {
-    await session.abortTransaction();
     next(err);
-  } finally {
-    await session.endSession();
   }
 };
 export { signUpController };
