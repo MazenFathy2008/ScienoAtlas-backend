@@ -22,6 +22,12 @@ const contactUsSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    status: {
+      type: String,
+      enum: ["waiting", "resolved"],
+      default: "waiting",
+      required: true,
+    },
   },
   {
     timestamps: true,
