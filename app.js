@@ -15,6 +15,7 @@ import { WebSocketServer } from "ws";
 import http from "http";
 import setUpWepSocket from "./WebSocket/Websocket.js";
 import contactUs from "./routes/contactUs.route.js";
+import admin from "./routes/admin.route.js";
 dns.setServers(["8.8.8.8"]);
 const app = express();
 const server = http.createServer(app);
@@ -33,6 +34,7 @@ app.use("/auth/me", checkAuth);
 app.use("/signingOut", signOut);
 app.use("/link", paperLink);
 app.use("/contactUs", contactUs);
+app.use("/admin", admin);
 app.use(errorsMiddleware);
 server.listen(PORT, async () => {
   console.log(`http://localhost:${PORT}`);
