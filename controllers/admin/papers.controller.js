@@ -30,4 +30,21 @@ const getPapers = async (req, res, next) => {
     next(err);
   }
 };
-export { getPapers };
+const updateState = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    const user = await verifyToken(token);
+    const isAdmin = checkAdmin(user.role);
+    if (isAdmin) {
+      const { id } = req.params;
+      const  {state}  = req.body;
+      const paper = await Paper.findById(id);
+      paper.state = state;
+      await paper.save();
+      res.json({paper});
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+export { getPapers, updateState };
