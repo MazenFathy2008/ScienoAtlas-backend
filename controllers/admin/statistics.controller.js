@@ -16,7 +16,7 @@ export default async function getStatistics(req, res, next) {
       const [pending, approved, rejected] = await Promise.all([
         Paper.countDocuments({ state: "pending" }),
         Paper.countDocuments({ state: "approved" }),
-        Paper.countDocuments({ state: "rejectd" }),
+        Paper.countDocuments({ state: "rejected" }),
       ]);
       const [waiting, resolved] = await Promise.all([
         Contact.countDocuments({ status: "waiting" }),
